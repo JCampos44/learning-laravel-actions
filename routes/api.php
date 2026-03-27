@@ -8,4 +8,7 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // })->middleware('auth:sanctum');
 
-Route::post('/register', [AuthController::class, 'register']);
+Route::prefix('v1')->group(function() {
+    Route::post('/register', [AuthController::class, 'register']);
+});
+
