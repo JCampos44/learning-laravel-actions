@@ -12,6 +12,37 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+    /**
+     * Register a new user and optionally issue an API token
+     *
+     * Crea un nuevo usuario validando la petición con `RegisterRequest`. Si se
+     * proporciona `device_name` se crea un personal access token y se devuelve
+     * junto con el `UserResource`. El token en texto plano se muestra sólo una vez.
+     *
+     * @group Authentication
+     *
+     * @bodyParam name string required The user's full name. Example: "Juan Pérez"
+     * @bodyParam email string required The user's email. Example: "user@example.com"
+     * @bodyParam password string required Minimum 8 characters.
+     * @bodyParam password_confirmation string required Must match `password`.
+     * @bodyParam device_name string|null Optional device name used to name the token. Example: "iPhone 12"
+     *
+     * @response 201 {
+     *  "data": {
+     *    "id": 1,
+     *    "name": "Juan Pérez",
+     *    "email": "user@example.com",
+     *    "created_at": "2026-03-27T12:00:00.000000Z",
+     *    "updated_at": "2026-03-27T12:00:00.000000Z"
+     *  },
+     *  "meta": {
+     *    "access_token": "plain-text-token",
+     *    "token_type": "Bearer"
+     *  }
+     * }
+     *
+     * @unauthenticated
+     */
     public function register(RegisterRequest $request)
     {
         $data = $request->validated();
@@ -32,6 +63,38 @@ class AuthController extends Controller
             ->setStatusCode(201);
     }
 
+    /**
+     * Login and issue token
+     *
+     * Authenticate the user with email and password and return a `UserResource`
+     * plus a one-time plain-text personal access token. The token is shown only once.
+     *
+     * @group Authentication
+     *
+     * @bodyParam email string required The user's email. Example: "user@example.com"
+     * @bodyParam password string required The user's password.
+     * @bodyParam device_name string|null Optional device name used to name the token.
+     *
+     * @response 200 {
+     *  "data": {
+     *    "id": 1,
+     *    "name": "Juan Pérez",
+     *    "email": "user@example.com",
+     *    "created_at": "2026-03-27T12:00:00.000000Z",
+     *    "updated_at": "2026-03-27T12:00:00.000000Z"
+     *  },
+     *  "meta": {
+     *    "access_token": "plain-text-token",
+     *    "token_type": "Bearer"
+     *  }
+     * }
+     *
+     * @response 401 {
+     *  "message": "The provided credentials are incorrect."
+     * }
+     *
+     * @unauthenticated
+     */
     public function login(LoginRequest $request)
     {
         $data = $request->validated();
