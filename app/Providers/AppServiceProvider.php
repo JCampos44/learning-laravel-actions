@@ -8,6 +8,7 @@ use Dedoc\Scramble\Support\Generator\OpenApi;
 use Dedoc\Scramble\Support\Generator\SecurityScheme;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use Knuckles\Scribe\Scribe;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,6 +25,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Scribe::normalizeEndpointUrlUsing(
+            fn (string $laravelUrl): string => $laravelUrl
+        );
+
         Scramble::configure()
             ->expose(
                 ui: '/docs/v1/api',

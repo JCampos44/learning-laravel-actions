@@ -224,7 +224,10 @@ return [
             ]),
         ],
         'urlParameters' => [
-            ...Defaults::URL_PARAMETERS_STRATEGIES,
+            ...removeStrategies(
+                Defaults::URL_PARAMETERS_STRATEGIES,
+                [Strategies\UrlParameters\GetFromLaravelAPI::class],
+            ),
         ],
         'queryParameters' => [
             ...Defaults::QUERY_PARAMETERS_STRATEGIES,
