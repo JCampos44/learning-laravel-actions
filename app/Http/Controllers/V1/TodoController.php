@@ -89,6 +89,7 @@ class TodoController extends Controller
                 AllowedFilter::trashed()
             )
             ->allowedSorts('id', 'title', 'created_at')
+            ->defaultSort('created_at')
             ->where('user_id', auth()->user()->id)
             ->get();
 
