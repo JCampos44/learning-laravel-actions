@@ -2,10 +2,6 @@
 
 namespace App\Providers;
 
-use Dedoc\Scramble\OpenApiContext;
-use Dedoc\Scramble\Scramble;
-use Dedoc\Scramble\Support\Generator\OpenApi;
-use Dedoc\Scramble\Support\Generator\SecurityScheme;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Knuckles\Scribe\Scribe;
@@ -28,22 +24,5 @@ class AppServiceProvider extends ServiceProvider
         Scribe::normalizeEndpointUrlUsing(
             fn (string $laravelUrl): string => $laravelUrl
         );
-
-        Scramble::configure()
-            ->expose(
-                ui: '/docs/v1/api',
-                document: '/docs/v1/api.json'
-            )
-            ->withDocumentTransformers(function (OpenApi $openApi, OpenApiContext $context) {
-                $openApi->secure(
-                    SecurityScheme::http('bearer', 'JWT')
-                        ->setDescription('Enter your bearer token')
-                        ->as('bearerAuth')
-                );
-            });
-
-        Gate::define('viewApiDocs', function ($user = null) {
-            return true;
-        });
     }
 }
