@@ -20,6 +20,12 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class TodoController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->authorizeResource(Todo::class, 'todo');
+    }
+
     /**
      * List the authenticated user's todos.
      *
